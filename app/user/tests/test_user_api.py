@@ -7,7 +7,7 @@ from rest_framework import status
 
 
 CREATE_USER_URL = reverse('user:create')
-TOKEN_URL = reverse('token:create')
+TOKEN_URL = reverse('user:token')
 
 
 def create_user(**params):
@@ -42,8 +42,8 @@ class PublicUserApiTest(TestCase):
             'password': 'nikhil123',
             'name': 'nikhil khandelwal'
         }
-        user = create_user(**payload)
-        
+        create_user(**payload)
+
         res = self.client.post(CREATE_USER_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
@@ -102,7 +102,7 @@ class PublicUserApiTest(TestCase):
 
     def test_create_token_missing_field(self):
         """Test that token creation require email and password fields"""
-        res = self.client.post(TOKEN_URL, {email: 'one', password: ''})
+        res = self.client.post(TOKEN_URL, {'email': 'one', 'password': ''})
 
         self.assertNotIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
